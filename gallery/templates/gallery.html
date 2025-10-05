@@ -1,0 +1,451 @@
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html>
+<style>
+    .section-title {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .section-subtext {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 0 20px 40px;
+    }
+
+.gallery img {
+  width: 100%;
+  height: 350px;
+  object-fit: contain;  /* Ensures full image fits without cropping */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal img {
+      max-height: 80vh;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .modal button {
+      position: absolute;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .close-btn {
+      top: 20px;
+      right: 30px;
+    }
+
+    .prev-btn {
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .next-btn {
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+.carousel-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0; /* 48px top and bottom spacing */
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap:  0.5rem; /* consistent spacing between images */
+  padding: 0 5vw;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel-image {
+  height: 300px;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  border-radius: 0px; /* more pronounced round edges */
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  opacity: 0.5;
+  transform: scale(0.85);
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+  object-fit: cover;
+}
+
+.carousel-image.active {
+  transform: scale(1.20);
+  opacity: 1;
+  z-index: 2;
+}
+
+  </style>
+<body>
+
+<section class="mt-4">
+
+  <!-- CATEGORY 1 -->
+  <div class="carousel-container">
+    <div class="carousel-track">
+      {% for _ in "123" %}
+        {% for image in images1 %}
+          <img src="{{ image.image.url }}" alt="Image1" class="carousel-image" onclick="openModal('{{ image.image.url }}', 'image1')" />
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+     <!-- Content of category1 -->
+  <div class="flex flex-col ml-40 py-10 -mt-12">
+  <div class="flex items-center">
+    <!-- Horizontal Line -->
+    <div class="w-[100px] h-[2px] bg-[#CFC4B2] mr-2 -ml-28 "></div>
+
+    <!-- Heading -->
+    <h1 style="color: gray; font-size: 13px;">The Timeless House</h1>
+  </div>
+
+  <!-- Subheading and Paragraph -->
+  <h2 style="color: black; text-align: left; font-size: 12px;">3BHK Luxury Apartment</h2>
+  <div class="w-[1300px] h-[1px] bg-black mb-4 -ml-28"></div>
+  <p style="color: black; text-align: left; font-size: 11px; " class="-mt-4 ">Area: 2200 sqft Matunga, Mumbai</p>
+</div>
+<!-- hidden -->
+  <div class="gallery image1-gallery" style="display: none;">
+    {% for image in images1 %}
+      <img src="{{ image.image.url }}" alt="Image1" />
+    {% endfor %}
+  </div>
+
+  <!-- CATEGORY 2 -->
+  <div class="carousel-container -mt-4">
+    <div class="carousel-track">
+      {% for _ in "123" %}
+        {% for image in images2 %}
+          <img src="{{ image.image.url }}" alt="Image2" class="carousel-image" onclick="openModal('{{ image.image.url }}', 'image2')" />
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+    <!-- Content of category2 -->
+ <div class="flex flex-col ml-40 py-10 -mt-12">
+  <div class="flex items-center">
+    <!-- Horizontal Line -->
+    <div class="w-[100px] h-[2px] bg-[#CFC4B2] mr-2 -ml-28"></div>
+
+    <!-- Heading -->
+    <h1 style="color: gray; font-size: 13px;">Modern Minimalist</h1>
+  </div>
+
+  <!-- Subheading and Paragraph -->
+  <h2 style="color: black; text-align: left; font-size: 12px;">2BHK Premium Flat</h2>
+  <div class="w-[1300px] h-[1px] bg-black mb-4 -ml-28"></div>
+  <p style="color: black; text-align: left; font-size: 11px;" class="-mt-4">Area: 1500 sqft Bandra, Mumbai</p>
+</div>
+
+  <!--hidden-->
+  <div class="gallery image2-gallery" style="display: none;">
+    {% for image in images2 %}
+      <img src="{{ image.image.url }}" alt="Image2" />
+    {% endfor %}
+  </div>
+
+  <!-- CATEGORY 3 -->
+  <div class="carousel-container">
+    <div class="carousel-track">
+      {% for _ in "123" %}
+        {% for image in images3 %}
+          <img src="{{ image.image.url }}" alt="Image3" class="carousel-image" onclick="openModal('{{ image.image.url }}', 'image3')" />
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="flex flex-col ml-40 py-10 -mt-12">
+  <div class="flex items-center">
+    <!-- Horizontal Line -->
+    <div class="w-[100px] h-[2px] bg-[#CFC4B2] mr-2 -ml-28"></div>
+
+    <!-- Heading -->
+    <h1 style="color: gray; font-size: 13px;">Nature Retreat Villa</h1>
+  </div>
+
+  <!-- Subheading and Paragraph -->
+  <h2 style="color: black; text-align: left; font-size: 12px;">4BHK Villa with Garden</h2>
+  <div class="w-[1300px] h-[1px] bg-black mb-4 -ml-28"></div>
+  <p style="color: black; text-align: left; font-size: 11px;" class="-mt-4">
+    Area: 3200 sqft Lonavala, Maharashtra
+  </p>
+</div>
+<!--hidden-->
+  <div class="gallery image3-gallery" style="display: none;">
+    {% for image in images3 %}
+      <img src="{{ image.image.url }}" alt="Image3" />
+    {% endfor %}
+  </div>
+
+  <!-- CATEGORY 4 -->
+<div class="carousel-container">
+  <div class="carousel-track">
+    {% for _ in "123" %}
+      {% for image in images4 %}
+        <img src="{{ image.image.url }}" alt="Image4" class="carousel-image" onclick="openModal('{{ image.image.url }}', 'image4')" />
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+<div class="flex flex-col ml-40 py-10 -mt-12">
+  <div class="flex items-center">
+    <!-- Horizontal Line -->
+    <div class="w-[100px] h-[2px] bg-[#CFC4B2] mr-2 -ml-28"></div>
+
+    <!-- Heading -->
+    <h1 style="color: gray; font-size: 13px;">The Work Space</h1>
+  </div>
+
+  <!-- Subheading and Paragraph -->
+  <h2 style="color: black; text-align: left; font-size: 12px;">Corporate Office</h2>
+  <div class="w-[1300px] h-[1px] bg-black mb-4 -ml-28"></div>
+  <p style="color: black; text-align: left; font-size: 11px;" class="-mt-4">
+    Area: 2600 sqft, Andheri, Mumbai
+  </p>
+</div>
+<!--hidden-->
+  <div class="gallery image4-gallery" style="display: none;">
+    {% for image in images4 %}
+      <img src="{{ image.image.url }}" alt="Image4" />
+    {% endfor %}
+  </div>
+</section>
+
+  <!-- Lightbox Modal -->
+ <div class="modal" id="lightboxModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <button class="prev-btn" onclick="prevImage()">&#10094;</button>
+    <img id="modalImage" src="" />
+    <button class="next-btn" onclick="nextImage()">&#10095;</button>
+  </div>
+</div>
+
+
+<script>
+// Step 1: Collect image URLs for each category based on class
+const image1Images = Array.from(document.querySelectorAll(".image1-gallery img")).map(img => img.src);
+const image2Images = Array.from(document.querySelectorAll(".image2-gallery img")).map(img => img.src);
+const image3Images = Array.from(document.querySelectorAll(".image3-gallery img")).map(img => img.src);
+
+// Step 2: Track the current category and image index
+let currentCategoryImages = [];
+let currentIndex = 0;
+
+/**
+ * openModal - Show the modal with clicked image from a specific category
+ * @param {string} src - URL of clicked image
+ * @param {string} category - One of: 'image1', 'image2', 'image3'
+ */
+function openModal(src, category) {
+  // Set the correct array based on category
+  if (category === 'image1') {
+    currentCategoryImages = image1Images;
+  } else if (category === 'image2') {
+    currentCategoryImages = image2Images;
+  } else if (category === 'image3') {
+    currentCategoryImages = image3Images;
+  }
+
+  // Set current index
+  currentIndex = currentCategoryImages.indexOf(src);
+
+  // Show modal
+  document.getElementById("modalImage").src = src;
+  document.getElementById("lightboxModal").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("lightboxModal").classList.remove("active");
+}
+
+function nextImage() {
+  currentIndex = (currentIndex + 1) % currentCategoryImages.length;
+  document.getElementById("modalImage").src = currentCategoryImages[currentIndex];
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + currentCategoryImages.length) % currentCategoryImages.length;
+  document.getElementById("modalImage").src = currentCategoryImages[currentIndex];
+}
+
+// Close modal if background is clicked
+function closeModal() {
+  document.getElementById("lightboxModal").classList.remove("active");
+}
+
+
+  // header
+  document.getElementById('menu-button').addEventListener('click', function() {
+    document.getElementById('menu-mobile').classList.toggle('hidden');
+  });
+
+  document.getElementById('close-menu').addEventListener('click', function() {
+    document.getElementById('menu-mobile').classList.add('hidden');
+  });
+  
+  //personal info
+  document.addEventListener("DOMContentLoaded", function() {
+    function toggleSections() {
+      const mobileSection = document.getElementById("mobile-section");
+      const desktopSection = document.getElementById("desktop-section");
+  
+      if (window.innerWidth < 768) {
+        mobileSection.style.display = "block";
+        desktopSection.style.display = "none";
+      } else {
+        mobileSection.style.display = "none";
+        desktopSection.style.display = "block";
+      }
+    }
+  
+    // Run the function on page load
+    toggleSections();
+  
+    // Run the function on window resize
+    window.addEventListener("resize", toggleSections);
+  }); 
+    // Check if screen width is larger than 1024px (common desktop size)
+    function updateViewport() {
+      const viewport = document.querySelector('meta[name="viewport"]');
+      
+      if (window.innerWidth > 768) {  // If screen width is larger than 768px (desktop)
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.25, maximum-scale=1.25, minimum-scale=1.25, user-scalable=no');
+      } else {
+          // Reset to the mobile viewport for smaller screens
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+      }
+  }
+
+  window.addEventListener('resize', updateViewport);
+  window.addEventListener('load', updateViewport);
+</script>
+<script>
+  const carouselContainers = document.querySelectorAll('.carousel-container');
+
+  carouselContainers.forEach(container => {
+    const images = container.querySelectorAll('.carousel-image');
+
+    function setActiveImage() {
+      let closestImg = null;
+      let closestDistance = Infinity;
+
+      images.forEach(img => {
+        const rect = img.getBoundingClientRect();
+        const imgCenter = rect.left + rect.width / 2;
+        const screenCenter = window.innerWidth / 2;
+        const distance = Math.abs(screenCenter - imgCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestImg = img;
+        }
+      });
+
+      images.forEach(img => img.classList.remove('active'));
+      if (closestImg) closestImg.classList.add('active');
+    }
+
+    // Scroll logic for infinite loop
+    container.addEventListener('scroll', () => {
+      window.requestAnimationFrame(setActiveImage);
+
+      const scrollLeft = container.scrollLeft;
+      const scrollWidth = container.scrollWidth;
+      const containerWidth = container.offsetWidth;
+
+      const scrollToMiddle = () => {
+        const middle = scrollWidth / 3;
+        container.scrollLeft = middle + (scrollLeft % (scrollWidth / 3));
+      };
+
+      if (scrollLeft <= 0 || scrollLeft + containerWidth >= scrollWidth) {
+        scrollToMiddle();
+      }
+    });
+
+    // Scroll to middle on load and set active image
+    window.addEventListener('load', () => {
+      container.scrollLeft = container.scrollWidth / 3;
+      setActiveImage();
+    });
+
+    window.addEventListener('resize', setActiveImage);
+
+    // Optional: Arrow key support while hovering
+    container.addEventListener('mouseenter', () => {
+      document.addEventListener('keydown', scrollHandler);
+    });
+    container.addEventListener('mouseleave', () => {
+      document.removeEventListener('keydown', scrollHandler);
+    });
+
+    function scrollHandler(e) {
+      const scrollAmount = 200;
+      if (e.key === 'ArrowRight') {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      } else if (e.key === 'ArrowLeft') {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+    }
+  });
+</script>
+
+
+</body>
+</html>
